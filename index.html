@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>پیام‌ها</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080c;--card:#10131a;--ink:#f4f6fb;--mut:#8a90a2;--sep:#1a1d26;--acc:#0a7cff;--acc2:#2d9bff;--grn:#34d399;--red:#ff5d6c;--sp:cubic-bezier(.32,.72,0,1);--bn:cubic-bezier(.34,1.56,.64,1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#000}
+body{font-family:Vazirmatn,system-ui,sans-serif;color:var(--ink);line-height:1.6;overflow:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;transition:transform .25s var(--bn),opacity .2s,background .2s}
+button:active{transform:scale(.93)}
+input,textarea{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2.5px solid var(--acc2);outline-offset:2px}
+svg{display:block}[hidden]{display:none!important}
+#root{position:fixed;inset:0;max-width:560px;margin:auto;background:var(--bg);overflow:hidden}
+.pg{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);transition:transform .55s var(--sp),opacity .4s}
+#home.back{transform:translateX(24%);opacity:.5}
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px}
+.top h1{margin:0;font-size:1.45rem;font-weight:800}
+.ib{width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.ib:active{background:#ffffff14}
+.sr{height:0;overflow:hidden;opacity:0;transition:height .45s var(--sp),opacity .3s;padding:0 16px}
+.sr.on{height:54px;opacity:1}
+.sr input{width:100%;height:42px;border-radius:14px;border:0;background:var(--card);padding:0 16px;outline:0}
+/* chat list */
+#cl{flex:1;overflow-y:auto;padding-bottom:110px}
+.ch{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px;text-align:start;position:relative}
+.ch:active{background:#ffffff0d;transform:none}
+.ch:not(:last-child)::after{content:"";position:absolute;bottom:0;inset-inline-start:94px;inset-inline-end:0;height:1px;background:var(--sep)}
+.ch.in{animation:rin .6s var(--sp) both;animation-delay:calc(var(--i) * 50ms)}
+@keyframes rin{from{opacity:0;transform:translateY(22px)}}
+.av{width:62px;height:62px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:1.4rem;color:#fff;background:linear-gradient(145deg,hsl(var(--h) 75% 58%),hsl(calc(var(--h) + 40) 70% 42%));position:relative;box-shadow:inset 0 0 0 1px #ffffff22}
+.av.sm{width:42px;height:42px;font-size:1.05rem}
+.av.on::after{content:"";position:absolute;bottom:1px;inset-inline-end:1px;width:12px;height:12px;border-radius:50%;background:var(--grn);border:2.5px solid var(--bg)}
+.bd{flex:1;min-width:0}
+.bd b{display:block;font-size:1.1rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd small{display:block;color:var(--mut);font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:50px;color:var(--mut);font-size:.88rem}
+.mt .bg{min-width:24px;height:24px;padding:0 7px;border-radius:12px;background:var(--acc);color:#fff;font-weight:700;display:grid;place-items:center;animation:pp .5s var(--bn)}
+@keyframes pp{from{transform:scale(.3)}}
+.empty{text-align:center;color:var(--mut);padding:70px 30px}
+.empty .ei{width:84px;height:84px;margin:0 auto 14px;border-radius:28px;display:grid;place-items:center;color:var(--acc2);background:#0a7cff22}
+.empty b{display:block;color:var(--ink);font-size:1.15rem}
+.fab{position:absolute;bottom:calc(26px + env(safe-area-inset-bottom,0));right:22px;width:66px;height:66px;border-radius:50%;background:linear-gradient(145deg,var(--acc2),var(--acc));display:grid;place-items:center;box-shadow:0 10px 30px #0a7cff66;transition:transform .35s var(--bn)}
+.fab:active{transform:scale(.88) rotate(-8deg)}
+/* chat page */
+#chat{transform:translateX(-105%);z-index:3}
+#chat.open{transform:none}
+.chd{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top,0)) 8px 8px;background:#0b0d13e6;backdrop-filter:blur(18px);border-bottom:1px solid var(--sep);z-index:2}
+.chd .nm{flex:1;min-width:0}.chd b{display:block;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chd small{display:block;color:var(--mut);font-size:.8rem;transition:color .3s}
+.chd small.t{color:var(--acc2)}.chd small.o{color:var(--grn)}
+.dots i{display:inline-block;width:4px;height:4px;margin:0 1px;border-radius:50%;background:currentColor;animation:dt 1.1s infinite}
+.dots i:nth-child(2){animation-delay:.18s}.dots i:nth-child(3){animation-delay:.36s}
+@keyframes dt{40%{transform:translateY(-4px)}}
+#ms{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding:14px 12px;background:radial-gradient(120% 60% at 50% 0,#0d1626,var(--bg) 70%)}
+.day{align-self:center;margin:10px 0 6px;padding:3px 14px;border-radius:99px;background:#ffffff12;color:var(--mut);font-size:.78rem}
+.b{max-width:80%;padding:8px 12px 5px;border-radius:19px;word-break:break-word;position:relative}
+.b.me{align-self:flex-start;background:linear-gradient(145deg,#1b8cff,#0a62e6);border-end-start-radius:6px;transform-origin:bottom right}
+.b.th{align-self:flex-end;background:#1a1e29;border-end-end-radius:6px;transform-origin:bottom left}
+.b.in{animation:bin .45s var(--bn)}
+@keyframes bin{from{opacity:0;transform:translateY(16px) scale(.85)}}
+.b .tx{white-space:pre-wrap;line-height:1.7}
+.b .tm{display:flex;align-items:center;gap:4px;justify-content:flex-end;font-size:.7rem;opacity:.75;margin-top:1px;direction:ltr}
+.b.me .tm{opacity:.9}
+.tk{color:#ffffffaa}.tk.r{color:#9be7ff}
+.mt .tk{color:var(--mut)}.mt .tk.r{color:var(--acc2)}
+.sd svg{transform:scaleX(-1)}
+.typ{display:flex;gap:4px;padding:14px 16px}
+.typ i{width:7px;height:7px;border-radius:50%;background:var(--mut);animation:dt 1.1s infinite}
+.typ i:nth-child(2){animation-delay:.18s}.typ i:nth-child(3){animation-delay:.36s}
+.cp{display:flex;align-items:flex-end;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0));background:#0b0d13}
+.cp textarea{flex:1;resize:none;max-height:120px;min-height:46px;padding:11px 16px;border-radius:23px;border:1px solid var(--sep);background:var(--card);outline:0;line-height:1.6;transition:border-color .25s}
+.cp textarea:focus{border-color:#0a7cff88}
+.sd{width:46px;height:46px;border-radius:50%;background:var(--acc);display:grid;place-items:center;flex:none;opacity:.35;transform:scale(.85)}
+.sd.on{opacity:1;transform:none;box-shadow:0 6px 18px #0a7cff66}
+.sd.on:active{transform:scale(.85) rotate(-12deg)}
+/* auth */
+.auth{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;padding:28px;background:radial-gradient(120% 70% at 50% 0,#0b2a5a,#07080c 60%)}
+.auth .lg{width:84px;height:84px;margin:0 auto 14px;border-radius:28px;display:grid;place-items:center;background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 14px 40px #0a7cff55;animation:fl 4s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-6px)}}
+.auth h2{text-align:center;margin:0 0 4px;font-size:1.6rem;font-weight:800}
+.auth>p{text-align:center;margin:0 0 22px;color:var(--mut)}
+.seg{position:relative;display:flex;background:var(--card);border-radius:14px;padding:4px;margin-bottom:14px}
+.seg i{position:absolute;top:4px;bottom:4px;inset-inline-start:4px;width:calc(50% - 4px);border-radius:10px;background:#252a38;transition:transform .5s var(--bn)}
+.seg.s i{transform:translateX(-100%)}
+.seg button{position:relative;flex:1;padding:8px;color:var(--mut)}.seg button.on{color:var(--ink);font-weight:700}
+.fld{display:grid;gap:10px}
+.fld input{width:100%;height:50px;padding:0 16px;border-radius:14px;border:1.5px solid var(--sep);background:var(--card);outline:0;direction:ltr;text-align:left;transition:border-color .25s}
+.fld input:focus{border-color:var(--acc)}.fld input[name=n]{direction:rtl;text-align:right}
+.nmw{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .45s var(--sp),opacity .3s}.nmw>div{overflow:hidden}
+.fld.s .nmw{grid-template-rows:1fr;opacity:1}
+.go{height:52px;border-radius:15px;background:var(--acc);font-weight:800;font-size:1.05rem;margin-top:14px;width:100%}
+.go:disabled{opacity:.6}
+.er{min-height:1.5em;margin-top:10px;text-align:center;color:var(--red);font-size:.88rem}
+.er.sh{animation:shake .4s}@keyframes shake{25%{translate:-8px}75%{translate:8px}}
+/* drawer & sheet */
+.veil{position:absolute;inset:0;z-index:30;background:#000a;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .4s}
+.veil.show{opacity:1;pointer-events:auto}
+.dr{position:absolute;top:0;bottom:0;left:0;width:min(80%,320px);z-index:31;background:#0d1017;padding:calc(30px + env(safe-area-inset-top,0)) 18px 24px;border-radius:0 28px 28px 0;transform:translateX(-105%);transition:transform .55s var(--sp);display:flex;flex-direction:column}
+.dr.show{transform:none}
+.dr .me{display:flex;flex-direction:column;gap:2px;margin-bottom:22px}
+.dr .me .av{width:72px;height:72px;margin-bottom:10px;font-size:1.8rem}.dr .me small{color:var(--mut);direction:ltr;text-align:right}
+.mi{display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;width:100%;text-align:start;opacity:0;transform:translateX(-30px)}
+.show .mi{animation:mi .5s var(--bn) forwards;animation-delay:calc(.1s + var(--i) * 70ms)}
+@keyframes mi{to{opacity:1;transform:none}}
+.mi:active{background:#ffffff10}.mi.red{color:var(--red)}
+.note{margin-top:auto;font-size:.78rem;color:var(--mut);line-height:1.8}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:31;background:#12151d;border-radius:28px 28px 0 0;padding:12px 20px calc(22px + env(safe-area-inset-bottom,0));transform:translateY(105%);transition:transform .55s var(--sp)}
+.sheet.show{transform:none}
+.sheet .grab{width:40px;height:5px;border-radius:5px;background:#ffffff30;margin:0 auto 16px}
+.sheet h3{margin:0 0 4px}.sheet p{margin:0 0 14px;color:var(--mut);font-size:.88rem}
+.sheet input{width:100%;height:50px;padding:0 16px;border-radius:14px;border:1.5px solid var(--sep);background:var(--card);outline:0;direction:ltr;text-align:left}
+.sheet input:focus{border-color:var(--acc)}
+.toast{position:absolute;left:50%;top:calc(14px + env(safe-area-inset-top,0));translate:-50% -200%;z-index:50;padding:10px 20px;border-radius:99px;background:#252a38;font-size:.88rem;white-space:nowrap;transition:translate .5s var(--bn)}
+.toast.show{translate:-50% 0}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="auth" id="auth" hidden>
+    <div class="lg"><svg width="44" height="44" viewBox="0 0 24 24" fill="#fff"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H9l-5 4v-4a2 2 0 01-2-2V6a2 2 0 012-2zm4 5v1.6h8V9zm0 3.4V14h5v-1.6z"/></svg></div>
+    <h2>پیام‌رسان</h2><p>با ایمیل وارد شو و گفتگو را شروع کن</p>
+    <div class="seg" id="sg"><i></i><button data-m="in" class="on">ورود</button><button data-m="up">عضویت</button></div>
+    <div class="fld" id="fl"><div class="nmw"><div><input name="n" placeholder="نام نمایشی" maxlength="24"></div></div><input name="e" type="email" placeholder="ایمیل" autocomplete="email"><input name="p" type="password" placeholder="رمز عبور (حداقل ۶ کاراکتر)"></div>
+    <div class="er" id="er"></div><button class="go" id="go">ورود</button>
+  </div>
+
+  <section class="pg" id="home">
+    <div class="top">
+      <button class="ib" id="bs" aria-label="جستجو"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+      <h1>پیام‌ها</h1>
+      <button class="ib" id="bm" aria-label="منو"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+    <div class="sr" id="sr"><input id="q" placeholder="جستجو در گفتگوها" autocomplete="off"></div>
+    <div id="cl"></div>
+    <button class="fab" id="nf" aria-label="گفتگوی جدید"><svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H9l-5 4v-4a2 2 0 01-2-2V6a2 2 0 012-2zm4 5v1.6h8V9zm0 3.4V14h5v-1.6z"/></svg></button>
+  </section>
+
+  <section class="pg" id="chat">
+    <div class="chd"><button class="ib" id="bk" aria-label="بازگشت"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button><span id="cav"></span><div class="nm"><b id="cn"></b><small id="cs"></small></div></div>
+    <div id="ms"></div>
+    <div class="cp"><textarea id="in" rows="1" placeholder="پیام..." aria-label="متن پیام"></textarea><button class="sd" id="sn" aria-label="ارسال"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M3 11l18-8-8 18-2-8z"/></svg></button></div>
+  </section>
+
+  <div class="veil" id="vl"></div>
+  <aside class="dr" id="dr"><div class="me" id="dm"></div>
+    <button class="mi" style="--i:0" id="d1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>گفتگوی جدید</button>
+    <button class="mi red" style="--i:1" id="d2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3M16 8l4 4-4 4M20 12H9"/></svg>خروج از حساب</button>
+    <p class="note" id="dn"></p></aside>
+  <section class="sheet" id="sh"><div class="grab"></div><h3>گفتگوی جدید</h3><p>ایمیلی را که طرف مقابل با آن عضو شده وارد کن.</p><input id="ne" type="email" placeholder="friend@example.com" autocomplete="off"><div class="er" id="ne_er"></div><button class="go" id="ng" style="margin-top:6px">شروع گفتگو</button></section>
+  <div class="toast" id="ts"></div>
+</div>
+
+<script>
+/* ===== اتصال به سرور =====
+   برای پیام‌رسانی واقعی بین دو نفر، پیکربندی Firebase را اینجا بگذار. تا زمانی که null است، حالت نمایشی (آفلاین) اجرا می‌شود.
+   مثال: const FIREBASE = { apiKey:'...', authDomain:'...', projectId:'...', appId:'...' }; */
+const FIREBASE = {
+  apiKey: "AIzaSyAaH37Erg8IeaeDfQtVQeNaohgY9NgJU2I",
+  authDomain: "hassan-f7109.firebaseapp.com",
+  projectId: "hassan-f7109",
+  storageBucket: "hassan-f7109.firebasestorage.app",
+  messagingSenderId: "233330299277",
+  appId: "1:233330299277:web:ddcf1f9c772b089ae36dc4"
+};
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hue = s => { let h = 7; for (const c of String(s)) h = Math.imul(h ^ c.charCodeAt(0), 2654435761) >>> 0; return (h >>> 8) % 360; };
+const av = (name, uid, cls = '', on = false) => `<span class="av ${cls} ${on ? 'on' : ''}" style="--h:${hue(uid || name)}">${esc([...String(name).trim()][0] || '?')}</span>`;
+const hm = t => new Date(t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const dayKey = t => new Date(t).toDateString();
+function dayLabel(t) { const d = new Date(t), n = new Date(); if (d.toDateString() === n.toDateString()) return 'امروز'; if (new Date(n - 864e5).toDateString() === d.toDateString()) return 'دیروز'; return d.toLocaleDateString('fa-IR', { day: 'numeric', month: 'long' }); }
+function listTime(t) { if (!t) return ''; const d = new Date(t), n = new Date(); if (d.toDateString() === n.toDateString()) return hm(t); if (new Date(n - 864e5).toDateString() === d.toDateString()) return 'دیروز'; return d.toLocaleDateString('fa-IR', { day: 'numeric', month: 'short' }); }
+function seen(t) { const m = (Date.now() - t) / 60000; return m < 1 ? 'لحظاتی پیش' : m < 60 ? Math.floor(m) + ' دقیقه پیش' : m < 1440 ? Math.floor(m / 60) + ' ساعت پیش' : 'مدتی پیش'; }
+let toastT; function toast(m) { const t = $('#ts'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2400); }
+const tick = (read, two) => `<svg class="tk ${read ? 'r' : ''}" width="${two ? 17 : 13}" height="12" viewBox="0 0 ${two ? 18 : 13} 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6.5l3.5 3.5L11 2.5"/>${two ? '<path d="M7 9.5l.8.7L16 2.5"/>' : ''}</svg>`;
+
+/* ================= demo backend (آفلاین، برای دیدن ظاهر) ================= */
+function demoBE() {
+  const now = Date.now(), M = 60000, subs = { c: new Set(), m: {}, p: {} };
+  const S = {}, P = {};
+  const seed = (uid, name, online, last, arr, unread, seenMine) => {
+    const id = 'c_' + uid; P[uid] = { name, online, typing: false, last: now - last * M };
+    S[id] = { id, peerUid: uid, peerName: name, msgs: arr.map(([f, t, a], i) => ({ id: id + i, from: f === 'me' ? 'me' : uid, text: t, t: now - a * M })), unread, peerSeen: seenMine ? now : 0 };
+    fix(S[id]);
+  };
+  const fix = c => { const m = c.msgs[c.msgs.length - 1]; c.last = m ? { text: m.text, from: m.from, t: m.t } : null; c.u = m ? m.t : 0; };
+  seed('d1', 'علی', true, 0, [['me', 'فردا ساعت ۹ خوبه؟', 70], ['th', 'آره، من هستم', 40], ['th', 'باشه، تا بعد', 22]], 2, true);
+  seed('d2', 'مهدی', true, 0, [['th', 'سلام داداش', 120], ['me', 'سلام، چطوری؟', 110], ['th', 'عکس رو فرستادم', 95]], 1, true);
+  seed('d3', 'سارا', false, 25, [['me', 'ممنون از کمکت ❤️', 200]], 0, true);
+  seed('d4', 'رضا', false, 180, [['th', 'قرار فردا چیه؟', 300], ['me', 'تا بعد', 290]], 0, true);
+  const list = () => Object.values(S).sort((a, b) => b.u - a.u).map(c => ({ ...c }));
+  const nc = () => subs.c.forEach(f => f(list()));
+  const nm = id => (subs.m[id] || []).forEach(f => f(S[id].msgs.slice()));
+  const np = uid => (subs.p[uid] || []).forEach(f => f(pe(uid)));
+  const pe = uid => ({ online: P[uid].online, typing: P[uid].typing, lastSeen: P[uid].last });
+  const R = ['باشه 👍', 'حتماً', 'الان مشغولم، بعداً بهت خبر می‌دم', 'ممنون!', 'هههه 😄', 'آره درسته', 'فردا هماهنگ می‌کنیم', 'خوبه!', 'چشم'];
+  return {
+    demo: true,
+    onUser(cb) { setTimeout(() => cb({ uid: 'me', name: 'من', email: 'demo@example.com' }), 50); return () => {}; },
+    async signup() {}, async login() {}, logout() { toast('در حالت نمایشی خروجی وجود ندارد'); },
+    watchChats(cb) { subs.c.add(cb); cb(list()); return () => subs.c.delete(cb); },
+    watchMsgs(id, cb) { (subs.m[id] = subs.m[id] || new Set()).add(cb); cb(S[id].msgs.slice()); return () => subs.m[id].delete(cb); },
+    watchPeer(uid, id, cb) { (subs.p[uid] = subs.p[uid] || new Set()).add(cb); cb(pe(uid)); return () => subs.p[uid].delete(cb); },
+    async send(chat, text) {
+      const c = S[chat.id], t = Date.now(); c.msgs.push({ id: chat.id + t, from: 'me', text, t }); fix(c); nm(chat.id); nc();
+      const uid = chat.peerUid;
+      setTimeout(() => { c.peerSeen = Date.now(); nc(); }, 900);
+      setTimeout(() => { P[uid].typing = true; np(uid); }, 1300);
+      setTimeout(() => {
+        P[uid].typing = false; np(uid); const x = Date.now();
+        c.msgs.push({ id: chat.id + x, from: uid, text: R[Math.floor(Math.random() * R.length)], t: x }); fix(c);
+        if (cur && cur.id === chat.id) c.peerSeen = x; else c.unread++;
+        nm(chat.id); nc();
+      }, 3000);
+    },
+    markRead(id) { const c = S[id]; if (c && c.unread) { c.unread = 0; nc(); } },
+    typing() {},
+    async findUser() { return null; },
+    openChat(p) { return { id: 'c_' + p.uid, peerUid: p.uid, peerName: p.name }; }
+  };
+}
+
+/* ================= Firebase backend ================= */
+async function fbBE() {
+  const B = 'https://www.gstatic.com/firebasejs/10.12.2/';
+  const [A, Au, F] = await Promise.all([import(B + 'firebase-app.js'), import(B + 'firebase-auth.js'), import(B + 'firebase-firestore.js')]);
+  const app = A.initializeApp(FIREBASE), auth = Au.getAuth(app), db = F.getFirestore(app);
+  const mk = u => u && { uid: u.uid, email: u.email, name: u.displayName || u.email.split('@')[0] };
+  const cid = (a, b) => [a, b].sort().join('_'); let pres, tyAt = 0;
+  const ping = () => me && F.setDoc(F.doc(db, 'users', me.uid), { lastSeen: Date.now() }, { merge: true }).catch(() => {});
+  return {
+    demo: false,
+    onUser(cb) { return Au.onAuthStateChanged(auth, u => { me = mk(u); cb(me); clearInterval(pres); if (u) { ping(); pres = setInterval(() => { if (!document.hidden) ping(); }, 25000); } }); },
+    async signup(name, e, p) { const c = await Au.createUserWithEmailAndPassword(auth, e, p); await Au.updateProfile(c.user, { displayName: name }); await F.setDoc(F.doc(db, 'users', c.user.uid), { name, email: e, emailLower: e.toLowerCase(), lastSeen: Date.now() }); if (me && me.uid === c.user.uid) { me.name = name; $('#dm').innerHTML = av(name, me.uid) + `<b>${esc(name)}</b><small>${esc(me.email)}</small>`; } },
+    async login(e, p) { await Au.signInWithEmailAndPassword(auth, e, p); },
+    logout: () => Au.signOut(auth),
+    watchChats(cb) { return F.onSnapshot(F.query(F.collection(db, 'chats'), F.where('members', 'array-contains', me.uid)), s => cb(s.docs.map(d => { const x = d.data(), pu = x.members.find(m => m !== me.uid); return { id: d.id, peerUid: pu, peerName: (x.names || {})[pu] || 'کاربر', last: x.last || null, unread: (x.unread || {})[me.uid] || 0, peerSeen: (x.seen || {})[pu] || 0, u: x.updatedAt || 0 }; }).sort((a, b) => b.u - a.u))); },
+    watchMsgs(id, cb) { return F.onSnapshot(F.query(F.collection(db, 'chats', id, 'messages'), F.orderBy('t'), F.limit(300)), s => cb(s.docs.map(d => ({ id: d.id, ...d.data() })))); },
+    watchPeer(uid, id, cb) {
+      let d = {}, tm; const emit = () => { const n = Date.now(); cb({ online: n - (d.lastSeen || 0) < 60000, typing: !!(d.typing && d.typing.chat === id && n - d.typing.t < 4000), lastSeen: d.lastSeen || 0 }); clearTimeout(tm); if (d.typing) tm = setTimeout(emit, 4200); };
+      const iv = setInterval(emit, 20000), un = F.onSnapshot(F.doc(db, 'users', uid), s => { d = s.data() || {}; emit(); });
+      return () => { un(); clearInterval(iv); clearTimeout(tm); };
+    },
+    async send(chat, text) {
+      const t = Date.now();
+      await F.setDoc(F.doc(db, 'chats', chat.id), { members: [me.uid, chat.peerUid], names: { [me.uid]: me.name, [chat.peerUid]: chat.peerName }, last: { text, from: me.uid, t }, updatedAt: t, unread: { [chat.peerUid]: F.increment(1) } }, { merge: true });
+      await F.addDoc(F.collection(db, 'chats', chat.id, 'messages'), { from: me.uid, text, t });
+    },
+    markRead(id) { F.updateDoc(F.doc(db, 'chats', id), { ['unread.' + me.uid]: 0, ['seen.' + me.uid]: Date.now() }).catch(() => {}); },
+    typing(id) { const n = Date.now(); if (n - tyAt < 2500) return; tyAt = n; F.setDoc(F.doc(db, 'users', me.uid), { typing: { chat: id, t: n } }, { merge: true }).catch(() => {}); },
+    async findUser(email) { const s = await F.getDocs(F.query(F.collection(db, 'users'), F.where('emailLower', '==', email.toLowerCase()), F.limit(1))); const d = s.docs[0]; return d && { uid: d.id, name: d.data().name, email: d.data().email }; },
+    openChat(p) { return { id: cid(me.uid, p.uid), peerUid: p.uid, peerName: p.name }; }
+  };
+}
+
+/* ================= app ================= */
+let be, me = null, chats = [], cur = null, msgs = [], peer = {}, un = {}, q = '', firstList = true, shown = new Set();
+
+/* ---- auth ---- */
+let mode = 'in';
+$('#sg').onclick = e => { const b = e.target.closest('button'); if (!b) return; mode = b.dataset.m; $('#sg').classList.toggle('s', mode === 'up'); $('#fl').classList.toggle('s', mode === 'up'); document.querySelectorAll('#sg button').forEach(x => x.classList.toggle('on', x === b)); $('#go').textContent = mode === 'up' ? 'ساخت حساب' : 'ورود'; $('#er').textContent = ''; };
+$('#go').onclick = async () => {
+  const f = $('#fl'), n = f.querySelector('[name=n]').value.trim(), e = f.querySelector('[name=e]').value.trim(), p = f.querySelector('[name=p]').value;
+  const bad = m => { const x = $('#er'); x.textContent = m; x.classList.remove('sh'); void x.offsetWidth; x.classList.add('sh'); };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) return bad('ایمیل معتبر نیست.');
+  if (p.length < 6) return bad('رمز عبور باید حداقل ۶ کاراکتر باشد.');
+  if (mode === 'up' && n.length < 2) return bad('نام نمایشی را وارد کن.');
+  $('#go').disabled = true;
+  try { mode === 'up' ? await be.signup(n, e, p) : await be.login(e, p); }
+  catch (err) { const c = (err && err.code) || ''; bad(c.includes('already') ? 'این ایمیل قبلاً ثبت شده؛ وارد شو.' : c.includes('weak') ? 'رمز عبور ضعیف است.' : /invalid|wrong|user-not-found/.test(c) ? 'ایمیل یا رمز عبور اشتباه است.' : 'مشکل در اتصال؛ دوباره تلاش کن.'); }
+  $('#go').disabled = false;
+};
+
+/* ---- chat list ---- */
+function renderChats() {
+  const f = chats.filter(c => (c.peerName + ' ' + (c.last ? c.last.text : '')).toLowerCase().includes(q.toLowerCase()));
+  const L = $('#cl');
+  if (!f.length) { L.innerHTML = chats.length ? '<div class="empty"><b>نتیجه‌ای پیدا نشد</b></div>' : '<div class="empty"><div class="ei"><svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H9l-5 4v-4a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg></div><b>هنوز گفتگویی نداری</b>با دکمه‌ی آبی پایین، با ایمیل دوستت گفتگو را شروع کن.</div>'; return; }
+  L.innerHTML = f.map((c, i) => { const mine = c.last && c.last.from === me.uid, rd = c.last && c.last.t <= c.peerSeen;
+    return `<button class="ch ${firstList ? 'in' : ''}" style="--i:${Math.min(i, 10)}" data-id="${esc(c.id)}">${av(c.peerName, c.peerUid)}<span class="bd"><b>${esc(c.peerName)}</b><small>${esc(c.last ? c.last.text : 'گفتگو را شروع کن')}</small></span><span class="mt"><span>${listTime(c.last && c.last.t)}</span>${c.unread ? `<span class="bg">${c.unread > 99 ? '99+' : c.unread}</span>` : mine ? tick(rd, rd) : ''}</span></button>`; }).join('');
+  firstList = false;
+}
+$('#cl').onclick = e => { const b = e.target.closest('.ch'); if (b) openChat(chats.find(c => c.id === b.dataset.id)); };
+$('#bs').onclick = () => { const s = $('#sr'); s.classList.toggle('on'); if (s.classList.contains('on')) setTimeout(() => $('#q').focus(), 300); else { $('#q').value = ''; q = ''; renderChats(); } };
+$('#q').oninput = e => { q = e.target.value.trim(); renderChats(); };
+
+/* ---- conversation ---- */
+const msEl = $('#ms');
+function openChat(c) {
+  if (!c) return; cur = { id: c.id, peerUid: c.peerUid, peerName: c.peerName }; msgs = []; peer = {}; shown = new Set();
+  $('#cav').innerHTML = av(c.peerName, c.peerUid, 'sm'); $('#cn').textContent = c.peerName; $('#cs').textContent = ''; msEl.innerHTML = ''; $('#in').value = ''; sizeIn();
+  $('#chat').classList.add('open'); $('#home').classList.add('back');
+  try { history.pushState({ c: 1 }, ''); } catch {}
+  un.m && un.m(); un.p && un.p();
+  un.m = be.watchMsgs(cur.id, l => { const had = msgs.length; msgs = l; renderMsgs(!had); if (cur && l.length && l[l.length - 1].from !== me.uid && !document.hidden) be.markRead(cur.id); });
+  un.p = be.watchPeer(cur.peerUid, cur.id, p => { peer = p; status(); renderMsgs(false); });
+  be.markRead(cur.id);
+}
+function closeChat() { if (!cur) return; cur = null; $('#chat').classList.remove('open'); $('#home').classList.remove('back'); un.m && un.m(); un.p && un.p(); un.m = un.p = null; $('#in').blur(); }
+$('#bk').onclick = () => { try { history.state && history.state.c ? history.back() : closeChat(); } catch { closeChat(); } };
+window.addEventListener('popstate', () => { closeChat(); closeOverlays(); });
+function status() {
+  const s = $('#cs'); if (!cur) return;
+  if (peer.typing) { s.className = 't'; s.innerHTML = 'در حال تایپ<span class="dots"><i></i><i></i><i></i></span>'; }
+  else if (peer.online) { s.className = 'o'; s.textContent = 'آنلاین'; }
+  else { s.className = ''; s.textContent = peer.lastSeen ? 'آخرین بازدید ' + seen(peer.lastSeen) : ''; }
+}
+function renderMsgs(initial) {
+  if (!cur) return;
+  const ch = chats.find(c => c.id === cur.id), ps = ch ? ch.peerSeen : 0;
+  const near = msEl.scrollHeight - msEl.scrollTop - msEl.clientHeight < 140, top = msEl.scrollTop;
+  let h = '', lastDay = '', lastMine = false;
+  msgs.forEach(m => {
+    const k = dayKey(m.t); if (k !== lastDay) { h += `<div class="day">${dayLabel(m.t)}</div>`; lastDay = k; }
+    const mine = m.from === me.uid, isNew = !shown.has(m.id) && !initial; shown.add(m.id); lastMine = mine;
+    h += `<div class="b ${mine ? 'me' : 'th'} ${isNew ? 'in' : ''}"><div class="tx" dir="auto">${esc(m.text)}</div><div class="tm"><span>${hm(m.t)}</span>${mine ? tick(m.t <= ps, m.t <= ps) : ''}</div></div>`;
+  });
+  if (peer.typing) h += '<div class="b th typ in"><i></i><i></i><i></i></div>';
+  msEl.innerHTML = h;
+  if (initial || near || lastMine) msEl.scrollTo({ top: msEl.scrollHeight, behavior: initial ? 'auto' : 'smooth' }); else msEl.scrollTop = top;
+  status();
+}
+const inp = $('#in'), sn = $('#sn');
+function sizeIn() { inp.style.height = 'auto'; inp.style.height = Math.min(120, inp.scrollHeight) + 'px'; sn.classList.toggle('on', !!inp.value.trim()); }
+inp.oninput = () => { sizeIn(); if (inp.value.trim() && cur) be.typing(cur.id); };
+function sendMsg() { const t = inp.value.trim(); if (!t || !cur) return; inp.value = ''; sizeIn(); be.send(cur, t).catch(() => toast('ارسال پیام انجام نشد')); inp.focus(); }
+sn.onclick = sendMsg;
+inp.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey && !matchMedia('(pointer:coarse)').matches) { e.preventDefault(); sendMsg(); } };
+document.addEventListener('visibilitychange', () => { if (!document.hidden && cur) be.markRead(cur.id); });
+
+/* ---- drawer & new chat ---- */
+function closeOverlays() { $('#dr').classList.remove('show'); $('#sh').classList.remove('show'); $('#vl').classList.remove('show'); }
+$('#vl').onclick = closeOverlays;
+$('#bm').onclick = () => { $('#dr').classList.add('show'); $('#vl').classList.add('show'); };
+const newChat = () => { closeOverlays(); setTimeout(() => { $('#ne_er').textContent = ''; $('#sh').classList.add('show'); $('#vl').classList.add('show'); setTimeout(() => $('#ne').focus(), 350); }, 250); };
+$('#nf').onclick = newChat; $('#d1').onclick = newChat;
+$('#d2').onclick = () => { closeOverlays(); be.logout(); };
+$('#ng').onclick = async () => {
+  const e = $('#ne').value.trim(), er = $('#ne_er'); er.textContent = '';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) return er.textContent = 'ایمیل معتبر نیست.';
+  if (me.email && e.toLowerCase() === me.email.toLowerCase()) return er.textContent = 'نمی‌توانی با خودت گفتگو کنی.';
+  $('#ng').disabled = true;
+  try { const u = await be.findUser(e); if (!u) er.textContent = be.demo ? 'در حالت نمایشی فقط مخاطبین نمونه وجود دارند. برای گفتگوی واقعی Firebase را وصل کن.' : 'کاربری با این ایمیل پیدا نشد. باید قبلاً عضو شده باشد.'; else { closeOverlays(); $('#ne').value = ''; const c = chats.find(x => x.peerUid === u.uid) || be.openChat(u); setTimeout(() => openChat(c), 200); } }
+  catch { er.textContent = 'مشکل در اتصال؛ دوباره تلاش کن.'; }
+  $('#ng').disabled = false;
+};
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlays(); });
+
+/* ---- start ---- */
+function start(u) {
+  me = u; un.c && un.c(); un.c = null; closeChat(); closeOverlays();
+  if (!u) { $('#auth').hidden = false; chats = []; firstList = true; return; }
+  $('#auth').hidden = true; firstList = true;
+  $('#dm').innerHTML = av(u.name, u.uid) + `<b>${esc(u.name)}</b><small>${esc(u.email)}</small>`;
+  $('#dn').textContent = be.demo ? 'حالت نمایشی: پیام‌ها فقط روی همین صفحه‌اند و بقیه نمی‌بینند. برای پیام‌رسانی واقعی Firebase را وصل کن.' : 'پیام‌ها روی سرور ذخیره می‌شوند.';
+  un.c = be.watchChats(l => { chats = l; renderChats(); if (cur) renderMsgs(false); });
+}
+(async () => {
+  if (FIREBASE) { try { be = await fbBE(); } catch (e) { be = demoBE(); toast('اتصال به سرور برقرار نشد؛ حالت نمایشی'); } } else be = demoBE();
+  be.onUser(start);
+})();
+</script>
+</body>
+</html>
